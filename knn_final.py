@@ -34,8 +34,6 @@ myReadFile2.close()
 x_train = []
 y_train = []
 
-print(len(traindata[0]))
-
 for i in range(0, len(traindata)):
     x_train.append(traindata[i][:-1])
     y_train.append(traindata[i][-1])
@@ -47,9 +45,6 @@ y_test = []
 for i in range(0, len(testdata)):
     x_test.append(testdata[i][:-1])
     y_test.append(testdata[i][-1])
-
-print(len(x_train))
-print(len(y_train))
 
 # create a list, which contains all of the distances
 # find the distances
