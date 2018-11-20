@@ -1,0 +1,85 @@
+---
+title: "Spatio-temporal prediction of ambulance calls"
+author: "Gergana Todorova, Lancaster University"
+output: html_document
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+Dissertation project was done in cooperation with the North West Ambulance Service. Project supervisors are Dr Anastasios Noulas from New York University and Dr Andrew Titman from Lancaster University.
+
+### Exploratory Data Analysis
+
+
+* Clear weekly pattern for some types of problems
+
+It is examined if the calls related to certain type of problems have stable temporal behavior through the year. This is tested by plotting the number of calls for each month in terms of hour of the week. It can be seen that there is a clear temporal pattern, which doesn't have monthly variations. 
+
+```{r pressure, echo=FALSE,results='hide', message=FALSE, warning=FALSE}
+library(ggplot2)
+library(rjson)
+library(googleVis)
+library(networkD3)
+
+mm_nat <- read.csv("E:/University of Lancaster/Dissertation/Exploratory Data Analysis/mm_nat_wh")
+
+### examine if the data has similar hourly patterns for each month
+
+mm_nat$MM <- as.factor(mm_nat$MM)
+
+n6<-ggplot(mm_nat) +  geom_line(aes(x = WH ,y = nat_29 , color = MM)) +
+  theme(legend.position="none")+
+  labs(title = " Traffic Incidents") +
+  scale_x_continuous(breaks=seq(0, 168, 12)) + xlab("Hour of the Week") + ylab("Number of Calls")
+
+plot(n6)
+```
+
+* Strong connection between human activities and ambulance calls
+
+
+Normalised urban activity frequencies versus ambulance call frequencies. Check-ins at nightlife places such as Pubs present a strong alignment over time with Assault related ambulance calls. Hour 0 represents Monday 0-1am.
+
+```{r echo=FALSE, message=FALSE, warning=FALSE} 
+library(ggplot2)
+
+nighlife_pattern_pair<-read.csv('E:/University of Lancaster/Paper/nighlife_pattern_pair.csv')
+ggplot(nighlife_pattern_pair) +  geom_line(aes(x = WH, y = percent, group=category, color = category)) +
+  theme(legend.position="bottom")+
+  labs(title = "Temporal pattern weekly") +
+  scale_x_continuous(breaks=seq(0, 168, 24))  + xlab("Hour of the Week") + ylab("Frequency")
+
+```
+
+* Some type of problems share temporal and spatial pattern
+
+Analysing where and when calls from various types of problem occur, it turned out that some of them happen at the same place and at the same time. 
+
+![](E:/Rmarkdown Projects/23ss.jpeg){width=25%}![](E:/Rmarkdown Projects/25ss.jpeg){width=25%}![](E:/Rmarkdown Projects/23m.png){width=20%}![](E:/Rmarkdown Projects/25m.png){width=20%}
+
+![](E:/Rmarkdown Projects/21ss.jpeg){width=25%}![](E:/Rmarkdown Projects/26ss.jpeg){width=25%}![](E:/Rmarkdown Projects/21m.png){width=20%}![](E:/Rmarkdown Projects/26m.png){width=20%}
+
+
+### Feature Engineering
+
+* Defined 'attractiveness' score between types of problems and human activities
+
+![](E:/Rmarkdown Projects/sankey.png){width=100%}
+
+* Calculated risk score for yielding and ambulance call per area
+
+Maps shows the risk score for selected areas only. Red is indicating high risk, green - low risk, blue- not enough information. 
+
+![](E:/Rmarkdown Projects/riskmap.png){width=100%}
+
+
+
+#### Data Modelling
+Two models were compared - ARIMA, when the data is looked purely as a time series and logistic regression, where the outcome is whether or not there will be a call in certain area at certain hour in a certain day. Logistic regression model provided 70% AUC, however, the plot below shows it is a better fit. 
+
+
+![](E:/Rmarkdown Projects/modelcomparison.jpeg){width=100%}
+
+
