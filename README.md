@@ -6,7 +6,7 @@ implemented KNN algorithm from scratch with Python for university project, which
 
 ## Multi-level Modeling
 
-applied hierarchical linear models in order to investigate the factors, which affect exam perofrmance of studentsq for a university project.
+applied hierarchical linear models in order to investigate the factors which affect exam perofrmance of students for a university project.
 
 ## Dissertation
 
